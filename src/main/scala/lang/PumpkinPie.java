@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -55,13 +56,13 @@ public class PumpkinPie {
         List<Token> tokens = scanner.scanTokens();
 
         Parser parser = new Parser(tokens);
-        Expr expression = parser.parse();
+        List<Stmt> statements = parser.parse();
 
         // Stop if there was a syntax error.
         if (hadError) return;
-        interpreter.interpret(expression);
+        interpreter.interpret(statements);
 
-        System.out.println(new AstPrinter().print(expression));
+        //System.out.println(new AstPrinter().print(expression));
     }
 
     static void error(int line, String message) {
