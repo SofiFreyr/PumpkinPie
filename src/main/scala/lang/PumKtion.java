@@ -2,12 +2,23 @@ package pumpkinp.lang;
 
 import java.util.List;
 
-class PumpKtion implements PumKallable{
+class PumKtion implements PumKallable{
     private final Stmt.Function declaration;
     private final Environment closure;
-    PumpKtion(Stmt.Function declaration, Environment closure) {
+    private final boolean isInitializer;
+
+    PumKtion(Stmt.Function declaration, Environment closure,
+                boolean isInitializer) {
+        this.isInitializer = isInitializer;
         this.closure = closure;
         this.declaration = declaration;
+    }
+
+    PumKtion bind(PumkInstance instance) {
+        Environment environment = new Environment(closure);
+        environment.define("this", instance);
+        return new PumKtion(declaration, environment,
+                isInitializer);
     }
 
     @Override
@@ -22,8 +33,11 @@ class PumpKtion implements PumKallable{
         try {
             interpreter.executeBlock(declaration.body, environment);
         } catch (Return returnValue) {
+            if (isInitializer) return closure.getAt(0, "this");
+
             return returnValue.value;
         }
+        if (isInitializer) return closure.getAt(0, "this");
         return null;
     }
 

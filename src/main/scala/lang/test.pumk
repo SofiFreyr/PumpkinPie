@@ -1,0 +1,15 @@
+class Superclass {
+  cook() {
+
+    print "Super Super Super";
+  }
+}
+
+class Subclass < Superclass {
+  cook() {
+    super.cook();
+    print "Not so super";
+  }
+}
+
+Subclass().cook();
